@@ -15,7 +15,7 @@
  *     (5) Workload bounds     minW[i] <= sum x[i,*,*] <= maxW[i]
  *     (6) Fairness link       sum x[i,*,*] - o[i] <= avgWork
  *
- * Created by: Your Name (Tuey)
+ * Created by: Chirayu Sukhum (Tuey)
  * Date: 10 Oct 2025
  *
  * This file follows Ajarn Sally's C coding standards
