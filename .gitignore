@@ -10,3 +10,5 @@ Demo/*.obj
 *.log
 gurobi.log
 maywin.log
+.vscode/
+.github/
