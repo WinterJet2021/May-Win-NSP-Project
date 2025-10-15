@@ -1,0 +1,33 @@
+
+Gurobi 12.0.3 (win64, gurobi_cl) logging started Fri Oct 10 17:44:38 2025
+
+Set parameter LogFile to value "gurobi.log"
+
+Gurobi 12.0.3 (win64, gurobi_cl) logging started Fri Oct 10 17:46:43 2025
+
+Set parameter LogFile to value "gurobi.log"
+Using license file C:\Users\tueyc\gurobi.lic
+
+Gurobi 12.0.3 (win64, gurobi_cl) logging started Fri Oct 10 17:47:47 2025
+
+Set parameter LogFile to value "gurobi.log"
+
+Gurobi 12.0.3 (win64, gurobi_cl) logging started Fri Oct 10 17:51:48 2025
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2675345
+Read parameters from file gurobi.env
+Set parameter LogFile to value "gurobi.log"
+Using gurobi.env file
+Academic license 2675345 - for non-commercial use only - registered to ra___@cmkl.ac.th
+
+Gurobi 12.0.3 (win64, gurobi_cl) logging started Fri Oct 10 18:00:25 2025
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2675345
+Read parameters from file gurobi.env
+Set parameter LogFile to value "gurobi.log"
+Using gurobi.env file
+Academic license 2675345 - for non-commercial use only - registered to ra___@cmkl.ac.th
