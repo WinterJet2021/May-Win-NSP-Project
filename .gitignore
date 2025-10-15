@@ -4,3 +4,9 @@ target/
 .log
 .exe
 .obj
+build/
+Demo/*.exe
+Demo/*.obj
+*.log
+gurobi.log
+maywin.log
