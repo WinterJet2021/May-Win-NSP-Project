@@ -1,0 +1,136 @@
+# ===========================
+# OS & Editor Junk
+# ===========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# ===========================
+# Build & Binary Artifacts
+# ===========================
+*.exe
+*.obj
+*.o
+*.dll
+*.so
+*.out
+*.a
+*.lib
+*.pdb
+
+# ===========================
+# Logs & Runtime Files
+# ===========================
+*.log
+*.env
+*.pid
+*.seed
+
+# ===========================
+# Project-specific folders
+# ===========================
+/build/
+/target/
+/dist/
+/bin/
+/Debug/
+/Release/
+/out/
+
+# ===========================
+# Demo / Gurobi outputs
+# ===========================
+Demo/*.exe
+Demo/*.obj
+Demo/*.log
+Demo/*.env
+Demo/*.out
+Demo/*.pdb
+Demo/*.tmp
+
+# ===========================
+# Python & Notebooks
+# ===========================
+__pycache__/
+*.pyc
+*.pyo
+*.ipynb_checkpoints/
+
+# ===========================
+# Visual Studio Code
+# ===========================
+.vscode/
+*.code-workspace
+
+# ===========================
+# Misc & Backups
+# ===========================
+*.old
+*.orig
+*.rej
+
+# -----------------------------------------------------------
+# Python general
+# -----------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.pdb
+
+# Compiled / temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# -----------------------------------------------------------
+# Virtual environment (Windows or Unix)
+# -----------------------------------------------------------
+nurse_env/
+venv/
+.env/
+.env.bak/
+.venv/
+ENV/
+env/
+
+# -----------------------------------------------------------
+# FastAPI / Uvicorn cache
+# -----------------------------------------------------------
+*.db-journal
+*.sqlite3
+*.db
+*.pid
+
+# -----------------------------------------------------------
+# VS Code / Editor folders
+# -----------------------------------------------------------
+.vscode/
+.idea/
+*.code-workspace
+
+# -----------------------------------------------------------
+# Test or generated files
+# -----------------------------------------------------------
+test_*.json
+sample_output.json
+*.csv
+*.xlsx
+*.zip
+*.tar
+*.gz
+
+# -----------------------------------------------------------
+# OneDrive temporary / backup files
+# -----------------------------------------------------------
+~$*
+*.tmp
+*.lnks

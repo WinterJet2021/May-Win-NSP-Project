@@ -4,8 +4,9 @@ import json, sys, csv, traceback
 from pathlib import Path
 from typing import Dict, Any, List
 
-from normalize_module import normalize_nsp_json
-from gurobi_solver import solve_from_cfg_gurobi
+# Fix imports to use relative imports
+from .normalize_module import normalize_nsp_json
+from .gurobi_solver import solve_from_cfg_gurobi
 
 def ensure_date_horizon(cfg: Dict[str, Any]) -> None:
     if "date_horizon" in cfg:
@@ -62,4 +63,7 @@ def main():
         sys.exit(2)
 
 if __name__ == "__main__":
+    # For direct execution of this file, add the parent directory to the path
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     main()
