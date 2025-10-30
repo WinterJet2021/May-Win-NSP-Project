@@ -1,0 +1,8 @@
+flask
+line-bot-sdk
+google-generativeai
+python-dotenv
+gunicorn
+requests
+rasa==3.6.20
+SQLAlchemy<2.0

@@ -1,0 +1,103 @@
+version: "3.1"
+
+intents:
+  - provide_profile
+  - add_shift_preference
+  - add_day_off
+  - add_day_off_range
+  - avoid_shift_type
+  - add_skill
+  - set_workload
+  - greet
+  - goodbye
+  - fallback
+
+entities:
+  - nurse_id
+  - nurse_name
+  - level
+  - employment_type
+  - unit
+  - shift
+  - days
+  - date
+  - date_range
+  - priority
+  - rank
+  - skill
+  - workload
+
+slots:
+  nurse_name:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: nurse_name
+
+  level:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: level
+
+  unit:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: unit
+
+  employment_type:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: employment_type
+
+  shift:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: shift
+
+  days:
+    type: list
+    mappings:
+      - type: from_entity
+        entity: days
+
+  date:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: date
+
+  skill:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: skill
+
+  workload:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: workload
+        
+  rank:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: rank
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I help with your schedule today?"
+
+  utter_goodbye:
+    - text: "Goodbye! Take care."
+
+  utter_fallback:
+    - text: "Sorry, I didn’t quite get that. Please provide more details."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
