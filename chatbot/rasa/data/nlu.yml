@@ -17,86 +17,68 @@ nlu:
     - เจอกันใหม่
     - ไปก่อนนะ
 
-# ===== PROVIDE PROFILE =====
-- intent: provide_profile
+# --- UPDATE PROFILE ---
+- intent: update_profile
   examples: |
-    - Hi! I'm [Nurse Mali](nurse_name), Level [1](level), working in [ER](unit).
-    - I'm [Level 2](level) nurse at [ICU](unit).
-    - ฉันชื่อ [ออย](nurse_name) เป็นพยาบาลระดับ [3](level) อยู่หอผู้ป่วย [ศัลยกรรม](unit)
-    - ผมทำงานใน [ER](unit) เป็นพยาบาลระดับ [1](level)
-    - I'm [Nurse Alice](nurse_name) from [ICU](unit), Level [2](level).
-    - My name is [Bee](nurse_name). I'm Level [1](level) and work in [Pediatrics](unit).
-    - This is [John](nurse_name), Level [3](level) nurse in [ER](unit).
-    - ฉันชื่อ [มะลิ](nurse_name) เป็นพยาบาลระดับ [1](level) ทำงานใน [ER](unit)
-    - ผมชื่อ [สมชาย](nurse_name) อยู่แผนก [ศัลยกรรม](unit)
-
-- regex: nurse_name
-  examples: |
-    - [A-Z][a-z]+
-    - [A-Z][a-z]+ [A-Z][a-z]+
-    - [ก-๙]+
-
-# ===== ADD SHIFT PREFERENCE =====
+    - I am a [level 1](level) [full_time](employment_type) nurse in the [ER](unit) department.
+    - I’m a [level 2](level) [part_time](employment_type) nurse in [ICU](unit).
+    - I work as a [level 3](level) nurse in the [OPD](unit).
+    - I am a [full_time](employment_type) nurse in the [ER](unit).
+    - I'm a [part_time](employment_type) nurse in [ICU](unit).
+    - I’m working in [ICU](unit) as a [level 1](level) [full_time](employment_type) nurse.
+    - I’m a [level 1](level) [full_time](employment_type) nurse at [OPD](unit).
+    - ฉันเป็นพยาบาล [ระดับ 1](level) ทำงาน [เต็มเวลา](employment_type) ที่ [ER](unit)
+    - ฉันเป็นพยาบาล [ระดับ 2](level) [พาร์ทไทม์](employment_type) ที่ [ICU](unit)
+    - ฉันอยู่หน่วย [กุมารเวช](unit) เป็นพยาบาล [ระดับ 3](level)
+    - ฉันทำงาน [เต็มเวลา](employment_type) ที่ [ER](unit)
+    
+# -------------------------------
+# ADD SHIFT PREFERENCE
+# -------------------------------
 - intent: add_shift_preference
   examples: |
-    - I prefer [morning](shift) shifts on [Mon, Wed, and Fri](days)
-    - I like [night](shift) shift on [Saturday](days)
-    - ฉันอยากเข้าเวร [เช้า](shift) วัน [จันทร์](days) และ [พุธ](days)
-    - ชอบเวร [บ่าย](shift) วัน [อังคาร](days)
-    - My priority is [morning](shift) shift on [Monday and Wednesday](days)
+    - I prefer [morning](shift) shifts on [Monday](days).
+    - I prefer [night](shift) shifts on [Tuesday](days) and [Thursday](days).
+    - Please schedule me for [afternoon](shift) shifts on [Wednesday](days) and [Friday](days).
+    - I’d like [morning](shift) shifts on [Mon, Wed, Fri](days).
+    - [High](priority) priority [morning](shift) shifts on [Monday](days) and [Wednesday](days).
+    - [Low](priority) priority for [night](shift) shifts on [Saturday](days).
+    - My preferred shift is [afternoon](shift) on [Tuesday](days).
+    - I like to work [morning](shift) shifts on [weekends](days).
+    - ฉันอยากขึ้นเวร [เช้า](shift) ในวัน [จันทร์](days)
+    - ขอเวร [บ่าย](shift) ในวัน [อังคาร](days) และ [พฤหัสบดี](days)
+    - ฉันชอบเวร [กลางคืน](shift) วัน [ศุกร์](days) และ [เสาร์](days)
+    - [ลำดับความสำคัญสูง](priority) สำหรับเวร [เช้า](shift) วัน [จันทร์](days) และ [พุธ](days)
+    - [ลำดับความสำคัญต่ำ](priority) สำหรับเวร [บ่าย](shift) วัน [เสาร์](days)
+    - ขอเวร [เช้า](shift) วัน [จันทร์](days) [ศุกร์](days)
+    - อยากขึ้นเวร [กลางคืน](shift) ในวัน [อาทิตย์](days)
+    - เดือนนี้อยากเข้าเวร [จันทร์](days) [เช้า](shift)
+    - ขอเวร [อังคาร](days) [บ่าย](shift)
+    - อยากขึ้นเวร [พุธ](days) [กลางคืน](shift)
+    - ขอเวร [พฤหัส](days) [เช้า](shift)
+    - ขอเวร [ศุกร์](days) [บ่าย](shift)
+    - อยากเข้าเวร [เสาร์](days) [กลางคืน](shift)
+    - อยากขึ้นเวร [อาทิตย์](days) [เช้า](shift)
 
-# ===== ADD DAY OFF =====
+# -------------------------------
+# ADD DAY OFF
+# -------------------------------
 - intent: add_day_off
   examples: |
-    - ขอหยุดวันที่ [5 พฤศจิกายน](date)
-    - อยากหยุดวันที่ [12 พฤศจิกายน](date)
-    - ขอวันที่ [5 พฤศจิกายน](date) [จำเป็น](rank)
-    - ขอหยุดวันที่ [10 พฤศจิกายน](date) [สำคัญมาก](rank)
-    - วันที่ [11 พฤศจิกายน](date) [ควรได้หยุด](rank)
-    - ขอหยุดวันที่ [7 พฤศจิกายน](date) [อยากมาก](rank)
-    - อยากหยุด [15 พฤศจิกายน](date) [ถ้าได้จะดี](rank)
-    - ขอวันที่ [8 พฤศจิกายน](date) [ด่วน](rank)
-    - ผมเข้าเวรวันที่ [8](date) ไม่ได้ [สำคัญมาก](rank)
-    - เข้าเวรวันที่ [10](date) ไม่ได้ [จำเป็น](rank)
-    - วันที่ [7](date) ไม่สะดวกเข้าเวร [อยากมาก](rank)
-    - ไม่ว่างเข้าเวรวันที่ [9](date) [จำเป็น](rank)
-    - วันที่ [6 พฤศจิกายน](date) ไม่สามารถเข้าเวรได้ [ด่วน](rank)
-    - เข้าเวรวันที่ [8 พฤศจิกายน](date) ไม่ไหว [สำคัญมาก](rank)
-    - ผมไม่สามารถเข้าเวรวันที่ [10](date)
-    - เข้าเวรไม่ได้วันที่ [12](date)
+    - ขอหยุด [วันที่ 13](date)
+    - ขอหยุดวันที่ [3](date)
+    - อยากหยุด [5](date)
+    - ขอวันหยุดวันที่ [12](date)
+    - ขอวันหยุด [วันที่ 7](date)
+    - I want a day off on [8](date)
+    - Please mark [15](date) as my day off
 
-# ===== ADD DAY OFF RANGE =====
-- intent: add_day_off_range
+- regex: date
   examples: |
-    - I can’t work on [Nov 12–13](date_range)
-    - I'm unavailable from [November 12th to 13th](date_range)
-    - ขอหยุดวันที่ [12 ถึง 13 พฤศจิกายน](date_range)
-    - ไม่สามารถทำงานวันที่ [11-12 พฤศจิกายน](date_range)
+    - วันที่\s?\d{1,2}
+    - \d{1,2}/\d{1,2}
+    - \d{1,2}\s?(มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม)
 
-# ===== AVOID SHIFT TYPE =====
-- intent: avoid_shift_type
-  examples: |
-    - I don’t want [night](shift) shifts this month
-    - Please avoid [night](shift) shifts for me
-    - ไม่อยากเข้าเวร [กลางคืน](shift)
-    - หลีกเลี่ยงเวร [บ่าย](shift)
-
-# ===== ADD SKILL =====
-- intent: add_skill
-  examples: |
-    - I can help with [ventilator](skill) patients
-    - I'm trained for [dialysis](skill)
-    - มีความชำนาญด้าน [เครื่องช่วยหายใจ](skill)
-    - สามารถดูแลผู้ป่วยที่ใช้ [ventilator](skill)
-
-# ===== SET WORKLOAD =====
-- intent: set_workload
-  examples: |
-    - I usually work [22](workload) shifts per month
-    - My regular workload is [20](workload) shifts monthly
-    - ฉันทำงานเดือนละ [22](workload) เวร
-    - ปกติทำงานประมาณ [18](workload) เวรต่อเดือน
-    
 - synonym: "3"
   examples: |
     - จำเป็น
@@ -123,3 +105,54 @@ nlu:
     - ได้ก็ดี
     - ดีถ้าได้
     - nice to have
+
+- synonym: morning
+  examples: |
+    - morning
+    - เช้า
+    - เวรเช้า
+    - ตอนเช้า
+
+- synonym: afternoon
+  examples: |
+    - afternoon
+    - บ่าย
+    - เวรบ่าย
+    - ตอนบ่าย
+
+- synonym: night
+  examples: |
+    - night
+    - กลางคืน
+    - เวรดึก
+    - เวรกลางคืน
+
+- synonym: Monday
+  examples: |
+    - จันทร์
+    - วันจันทร์
+- synonym: Tuesday
+  examples: |
+    - อังคาร
+    - วันอังคาร
+- synonym: Wednesday
+  examples: |
+    - พุธ
+    - วันพุธ
+- synonym: Thursday
+  examples: |
+    - พฤหัส
+    - พฤหัสบดี
+    - วันพฤหัส
+- synonym: Friday
+  examples: |
+    - ศุกร์
+    - วันศุกร์
+- synonym: Saturday
+  examples: |
+    - เสาร์
+    - วันเสาร์
+- synonym: Sunday
+  examples: |
+    - อาทิตย์
+    - วันอาทิตย์

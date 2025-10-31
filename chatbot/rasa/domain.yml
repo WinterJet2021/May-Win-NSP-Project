@@ -1,56 +1,43 @@
 version: "3.1"
 
 intents:
-  - provide_profile
+  - update_profile
   - add_shift_preference
   - add_day_off
-  - add_day_off_range
-  - avoid_shift_type
-  - add_skill
-  - set_workload
   - greet
   - goodbye
   - fallback
 
 entities:
-  - nurse_id
-  - nurse_name
   - level
   - employment_type
   - unit
   - shift
   - days
   - date
-  - date_range
+  - from
+  - to
   - priority
   - rank
-  - skill
-  - workload
 
 slots:
-  nurse_name:
-    type: text
-    mappings:
-      - type: from_entity
-        entity: nurse_name
-
   level:
     type: text
     mappings:
       - type: from_entity
         entity: level
 
-  unit:
-    type: text
-    mappings:
-      - type: from_entity
-        entity: unit
-
   employment_type:
     type: text
     mappings:
       - type: from_entity
         entity: employment_type
+
+  unit:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: unit
 
   shift:
     type: text
@@ -70,33 +57,39 @@ slots:
       - type: from_entity
         entity: date
 
-  skill:
+  from:
     type: text
     mappings:
       - type: from_entity
-        entity: skill
+        entity: from
 
-  workload:
+  to:
     type: text
     mappings:
       - type: from_entity
-        entity: workload
-        
+        entity: to
+
+  priority:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: priority
+
   rank:
     type: text
     mappings:
       - type: from_entity
         entity: rank
 
+
 responses:
   utter_greet:
-    - text: "Hello! How can I help with your schedule today?"
-
-  utter_goodbye:
-    - text: "Goodbye! Take care."
+    - text: "สวัสดีค่ะ ฉันสามารถช่วยบันทึกความต้องการของคุณได้ เช่น เวรที่ชอบหรือวันหยุด"
+    - text: "Hello! I can help you record your work preferences — like preferred shifts or days off."
 
   utter_fallback:
-    - text: "Sorry, I didn’t quite get that. Please provide more details."
+    - text: "ขอโทษค่ะ ฉันไม่เข้าใจ ลองพิมพ์ใหม่อีกครั้งนะคะ"
+    - text: "Sorry, I didn’t understand. Could you please rephrase?"
 
 session_config:
   session_expiration_time: 60

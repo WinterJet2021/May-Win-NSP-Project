@@ -1,31 +1,22 @@
 language: xx
+
 pipeline:
 - name: WhitespaceTokenizer
-- name: RegexFeaturizer
+- name: LanguageModelFeaturizer
+  model_name: "bert"
+  model_weights: "bert-base-multilingual-cased"
 - name: LexicalSyntacticFeaturizer
 - name: CountVectorsFeaturizer
-- name: CountVectorsFeaturizer
-  analyzer: char_wb
-  min_ngram: 1
-  max_ngram: 4
 - name: DIETClassifier
   epochs: 100
   constrain_similarities: true
 - name: EntitySynonymMapper
-# - name: DucklingEntityExtractor
-#   url: http://localhost:8000
-  dimensions: ["time", "duration"]
-assistant_id: 20251029-201051-pure-manuscript
+- name: ResponseSelector
+  epochs: 100
+
 policies:
-# # No configuration for policies was provided. The following default policies were used to train your model.
-# # If you'd like to customize them, uncomment and adjust the policies.
-# # See https://rasa.com/docs/rasa/policies for more information.
-#   - name: MemoizationPolicy
-#   - name: RulePolicy
-#   - name: UnexpecTEDIntentPolicy
-#     max_history: 5
-#     epochs: 100
-#   - name: TEDPolicy
-#     max_history: 5
-#     epochs: 100
-#     constrain_similarities: true
+- name: RulePolicy
+- name: MemoizationPolicy
+- name: TEDPolicy
+  epochs: 50
+assistant_id: 20251031-151446-other-function

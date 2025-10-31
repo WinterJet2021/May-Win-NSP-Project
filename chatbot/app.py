@@ -1,126 +1,158 @@
+# app.py — Auto-increment nurse ID version
 import os
 import json
-import sqlite3
 import re
-import requests
+import sqlite3
+import logging
 from datetime import datetime
+from contextlib import contextmanager
+
+import requests
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv, find_dotenv
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from collections import OrderedDict
 
-# ---------------------------
-# Environment Setup
-# ---------------------------
+# ------------------------------------
+# Setup & Config
+# ------------------------------------
 env_path = find_dotenv()
-print(f"Loading environment from: {env_path}")
 load_dotenv(env_path)
 
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 RASA_URL = os.getenv("RASA_URL", "http://localhost:5005/model/parse")
-DB_PATH = os.getenv("DATABASE_PATH", os.path.join(os.path.dirname(__file__), "nurse.db"))
+DB_PATH = os.getenv("DATABASE_PATH", os.path.join(os.path.dirname(__file__), "nurse_prefs.db"))
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logger = logging.getLogger("NurseBot")
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
-
 app = Flask(__name__)
 
-# ---------------------------
-# Database Setup
-# ---------------------------
-def init_db():
+# ------------------------------------
+# Database Helpers
+# ------------------------------------
+@contextmanager
+def db_connection():
     conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
+    try:
+        yield conn
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        logger.error(f"DB Error: {e}")
+        raise
+    finally:
+        conn.close()
 
-    # Table: nurses (main profile)
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS nurses (
-        id TEXT PRIMARY KEY,
-        name TEXT,
-        level INTEGER,
-        employment_type TEXT,
-        unit TEXT,
-        skills TEXT,
-        shifts_per_month INTEGER
-    )
-    """)
 
-    # Table: preferences (per-message extracted data)
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS preferences (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nurse_id TEXT,
-        preference_type TEXT,
-        data TEXT,
-        created_at TEXT
-    )
-    """)
-
-    conn.commit()
-    conn.close()
+def init_db():
+    with db_connection() as conn:
+        c = conn.cursor()
+        c.execute("""
+        CREATE TABLE IF NOT EXISTS nurses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            line_user_id TEXT UNIQUE,
+            name TEXT,
+            level INTEGER,
+            employment_type TEXT,
+            unit TEXT
+        )
+        """)
+        c.execute("""
+        CREATE TABLE IF NOT EXISTS preferences (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nurse_id INTEGER,
+            preference_type TEXT,
+            data TEXT,
+            created_at TEXT
+        )
+        """)
+    logger.info(f"Database initialized at: {DB_PATH}")
 
 init_db()
-print(f"Database initialized at: {DB_PATH}")
 
-# ---------------------------
-# DB Helpers
-# ---------------------------
-def upsert_nurse(nurse_id, name=None, level=None, employment_type=None, unit=None, skills=None, shifts_per_month=None):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    exists = c.execute("SELECT 1 FROM nurses WHERE id = ?", (nurse_id,)).fetchone()
+# ------------------------------------
+# DB Operations
+# ------------------------------------
+def get_or_create_nurse(line_user_id, name=None):
+    """Find nurse by LINE user ID or create new record."""
+    with db_connection() as conn:
+        c = conn.cursor()
+        nurse = c.execute("SELECT id FROM nurses WHERE line_user_id = ?", (line_user_id,)).fetchone()
 
-    if exists:
+        if nurse:
+            return nurse[0]
+
+        c.execute("INSERT INTO nurses (line_user_id, name) VALUES (?, ?)", (line_user_id, name or "Unknown"))
+        new_id = c.lastrowid
+        logger.info(f"New nurse created: ID={new_id}, LINE_ID={line_user_id}")
+        return new_id
+
+
+def update_nurse_details(nurse_id, level=None, unit=None, employment_type=None):
+    emp_type = normalize_employment_type(employment_type) if employment_type else None
+    with db_connection() as conn:
+        c = conn.cursor()
         updates, params = [], []
-        if name: updates.append("name = ?"); params.append(name)
-        if level: updates.append("level = ?"); params.append(level)
-        if employment_type: updates.append("employment_type = ?"); params.append(employment_type)
+        if level is not None: updates.append("level = ?"); params.append(level)
+        if emp_type: updates.append("employment_type = ?"); params.append(emp_type)
         if unit: updates.append("unit = ?"); params.append(unit)
-        if skills: updates.append("skills = ?"); params.append(json.dumps(skills))
-        if shifts_per_month: updates.append("shifts_per_month = ?"); params.append(shifts_per_month)
         if updates:
             params.append(nurse_id)
             c.execute(f"UPDATE nurses SET {', '.join(updates)} WHERE id = ?", params)
-    else:
-        c.execute(
-            "INSERT INTO nurses (id, name, level, employment_type, unit, skills, shifts_per_month) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (nurse_id, name or "", level, employment_type or "", unit or "", json.dumps(skills or []), shifts_per_month)
-        )
-
-    conn.commit()
-    conn.close()
 
 
 def insert_preference(nurse_id, pref_type, data_dict):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        "INSERT INTO preferences (nurse_id, preference_type, data, created_at) VALUES (?, ?, ?, ?)",
-        (nurse_id, pref_type, json.dumps(data_dict, ensure_ascii=False), datetime.utcnow().isoformat())
-    )
-    conn.commit()
-    conn.close()
-    print(f"Inserted pref for {nurse_id}: {pref_type} -> {data_dict}")
+    with db_connection() as conn:
+        conn.execute("""
+            INSERT INTO preferences (nurse_id, preference_type, data, created_at)
+            VALUES (?, ?, ?, ?)
+        """, (nurse_id, pref_type, json.dumps(data_dict, ensure_ascii=False), datetime.utcnow().isoformat()))
+    logger.info(f"Preference saved for nurse_id={nurse_id}: {pref_type} -> {data_dict}")
 
-# ---------------------------
-# Nurse Session Helpers
-# ---------------------------
-def upsert_nurse_profile(user_id, line_name):
-    nurse_id = f"N_{re.sub(r'[^a-z0-9_]', '_', line_name.lower())}"
-    upsert_nurse(nurse_id, name=line_name)
-    return nurse_id
+# ------------------------------------
+# Helper Utilities
+# ------------------------------------
+def normalize_employment_type(value):
+    if not value:
+        return None
+    v = str(value).strip().lower()
+    if v in ("full-time", "full time", "fulltime", "ft"):
+        return "full_time"
+    if v in ("part-time", "part time", "parttime", "pt"):
+        return "part_time"
+    if v in ("contract", "temp"):
+        return "contract"
+    return v
 
-def update_nurse_details(nurse_id, level=None, unit=None, workload=None, skills=None):
-    upsert_nurse(nurse_id, level=level, unit=unit, shifts_per_month=workload, skills=[skills] if skills else None)
 
-def save_nurse_session(user_id, line_name):
-    # Future placeholder for caching (no-op for now)
-    pass
+def normalize_day_list(raw_days):
+    if not raw_days:
+        return []
+    if isinstance(raw_days, list):
+        items = raw_days
+    else:
+        items = re.split(r"[,\s/]+", raw_days)
 
-# ---------------------------
-# Normalization Utilities
-# ---------------------------
+    normalized = []
+    for i in items:
+        token = i.strip().lower()
+        if token in ["จันทร์"]: normalized.append("Mon")
+        elif token in ["อังคาร"]: normalized.append("Tue")
+        elif token in ["พุธ"]: normalized.append("Wed")
+        elif token in ["พฤหัส", "พฤหัสบดี"]: normalized.append("Thu")
+        elif token in ["ศุกร์"]: normalized.append("Fri")
+        elif token in ["เสาร์"]: normalized.append("Sat")
+        elif token in ["อาทิตย์"]: normalized.append("Sun")
+        else:
+            normalized.append(DAY_MAP.get(token, token))
+    return list(dict.fromkeys(normalized))
+
+
 DAY_MAP = {
     "mon": "Mon", "monday": "Mon", "จันทร์": "Mon",
     "tue": "Tue", "tuesday": "Tue", "อังคาร": "Tue",
@@ -137,135 +169,160 @@ SHIFT_MAP = {
     "night": "N", "กลางคืน": "N", "n": "N"
 }
 
-def normalize_day_list(raw_days):
-    if not raw_days:
-        return []
-    if isinstance(raw_days, list):
-        items = raw_days
-    else:
-        items = re.split(r"[,\s/]+", raw_days)
-    normalized = [DAY_MAP.get(i.strip().lower(), i) for i in items if i.strip()]
-    return list(dict.fromkeys(normalized))
-
-# ---------------------------
-# LINE Webhook Endpoint
-# ---------------------------
+# ------------------------------------
+# LINE Webhook + Rasa Integration
+# ------------------------------------
 @app.route("/callback", methods=["POST"])
 def callback():
     signature = request.headers.get("X-Line-Signature", "")
     body = request.get_data(as_text=True)
-    print("Received webhook event:", body[:200])
-
     try:
         handler.handle(body, signature)
     except Exception as e:
-        print("Error handling event:", e)
+        logger.error(f"Error handling event: {e}")
         return str(e), 500
     return "OK"
 
-# ---------------------------
-# Message Handler
-# ---------------------------
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print("handle_message triggered")
     user_id = event.source.user_id
     user_message = event.message.text
 
-    # Fetch LINE username
     try:
         profile = line_bot_api.get_profile(user_id)
         line_name = profile.display_name
-    except Exception as e:
-        print(f"Failed to fetch LINE profile: {e}")
+    except Exception:
         line_name = "Unknown"
 
-    # Ensure nurse exists
-    nurse_id = upsert_nurse_profile(user_id, line_name)
-    save_nurse_session(user_id, line_name)
+    nurse_id = get_or_create_nurse(user_id, line_name)
 
-    # Send to Rasa
     try:
         rasa_resp = requests.post(RASA_URL, json={"text": user_message}, timeout=5)
         rasa_resp.raise_for_status()
         rasa_data = rasa_resp.json()
     except Exception as e:
-        print(f"Error contacting Rasa: {e}")
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="Sorry, I'm having trouble understanding right now. Please try again later.")
-        )
+        logger.error(f"Error contacting Rasa: {e}")
+        safe_reply(event, "ขอโทษค่ะ ระบบไม่สามารถตอบกลับได้ในตอนนี้")
         return
 
     intent = rasa_data.get("intent", {}).get("name")
     confidence = rasa_data.get("intent", {}).get("confidence", 0)
-    entities = {e["entity"]: e["value"] for e in rasa_data.get("entities", [])}
+    entities = {e.get("entity"): e.get("value") for e in rasa_data.get("entities", []) if "entity" in e}
 
-    print(f"Rasa intent={intent}, confidence={confidence}, entities={entities}")
-
-    # Fallback handling
-    if not intent or intent == "nlu_fallback" or confidence < 0.5:
+    if not intent or confidence < 0.5 or intent == "nlu_fallback":
         insert_preference(nurse_id, "unrecognized", {"text": user_message})
-        reply = f"Sorry {line_name}, I didn't quite get that. Could you please rephrase?"
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+        safe_reply(event, f"ขอโทษค่ะ {line_name} ฉันไม่เข้าใจข้อความของคุณ กรุณาลองใหม่อีกครั้งนะคะ")
         return
 
-    # Intent handling
-    if intent == "provide_profile":
-        update_nurse_details(nurse_id, level=entities.get("level"), unit=entities.get("unit"))
-        reply = f"Thanks {line_name}! Profile updated (Level {entities.get('level')}, Unit: {entities.get('unit')})."
+    reply = process_intent(intent, nurse_id, entities, line_name)
+    safe_reply(event, reply)
 
-    elif intent == "add_skill":
-        update_nurse_details(nurse_id, skills=entities.get("skill"))
-        insert_preference(nurse_id, "skills", {"skill": entities.get("skill")})
-        reply = f"Skill noted, {line_name}! ({entities.get('skill')})"
 
-    elif intent == "set_workload":
-        update_nurse_details(nurse_id, workload=entities.get("workload"))
-        insert_preference(nurse_id, "workload", {"shifts_per_month": entities.get("workload")})
-        reply = f"Got it, {line_name}! {entities.get('workload')} shifts per month recorded."
+def safe_reply(event, text):
+    try:
+        if not text or not str(text).strip():
+            text = "ขอโทษค่ะ ระบบไม่สามารถตอบกลับได้ในตอนนี้"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=text))
+    except Exception as e:
+        logger.error(f"LINE reply failed: {e}")
+
+# ------------------------------------
+# Intent Handling
+# ------------------------------------
+def process_intent(intent, nurse_id, entities, line_name):
+    if intent == "update_profile":
+        level = entities.get("level")
+        employment_type = entities.get("employment_type")
+        unit = entities.get("unit")
+
+        level_value = None
+        if level:
+            m = re.search(r"\d+", str(level))
+            if m:
+                level_value = int(m.group())
+
+        update_nurse_details(nurse_id, level=level_value, employment_type=employment_type, unit=unit)
+        return f"Got it, {line_name}! Profile updated (Level {level_value or 1}, {employment_type or 'full_time'}, Unit: {unit or 'ER'})."
 
     elif intent == "add_shift_preference":
         shift = SHIFT_MAP.get(entities.get("shift", "").lower(), "M")
         days = normalize_day_list(entities.get("days", []))
-        insert_preference(nurse_id, "preferred_shifts", {"shift": shift, "days": days})
-        reply = f"Got it, {line_name}! Shift preference recorded."
+        priority = entities.get("priority", "medium")
+        insert_preference(nurse_id, "preferred_shifts", {"shift": shift, "days": days, "priority": priority})
+        return f"Preference saved, {line_name}: {priority} priority {shift} shift on {', '.join(days)}."
 
     elif intent == "add_day_off":
-        date = entities.get("date")
-        rank = entities.get("rank", "2")
-        insert_preference(nurse_id, "preferred_days_off", {"date": date, "rank": int(rank)})
-        reply = f"Noted, {line_name}! Day off on {date} saved (priority {rank})."
+        raw_day = entities.get("date")
+        rank = entities.get("rank", 2)
 
-    else:
-        insert_preference(nurse_id, "general_message", {"text": user_message})
-        reply = f"Thanks {line_name}, I’ve saved that."
+        date_iso = None
+        if raw_day:
+            try:
+                day = int(re.sub(r"\D", "", raw_day))
+                now = datetime.now()
+                if day < now.day:
+                    next_month = now.month + 1 if now.month < 12 else 1
+                    year = now.year if next_month != 1 else now.year + 1
+                    date_obj = datetime(year, next_month, day)
+                else:
+                    date_obj = datetime(now.year, now.month, day)
+                date_iso = date_obj.date().isoformat()
+            except ValueError:
+                date_iso = None
 
-    # Send LINE reply
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
-    print(f"Replied to {line_name}: {reply}")
+        insert_preference(nurse_id, "preferred_days_off", {"date": date_iso, "rank": int(rank)})
+        if date_iso:
+            return f"Got it, {line_name}! Day off on {date_iso} saved (priority {rank})."
+        return f"Sorry {line_name}, I couldn’t recognize the date you meant. Please try again."
 
-# ---------------------------
-# Admin Endpoints
-# ---------------------------
-@app.route("/view_prefs", methods=["GET"])
-def view_prefs():
-    conn = sqlite3.connect(DB_PATH)
-    rows = conn.cursor().execute("SELECT id, nurse_id, preference_type, data, created_at FROM preferences ORDER BY id DESC").fetchall()
-    conn.close()
-    results = [{"id": r[0], "nurse_id": r[1], "preference_type": r[2], "data": json.loads(r[3]), "created_at": r[4]} for r in rows]
-    return jsonify(results)
+# ------------------------------------
+# Export All
+# ------------------------------------
+@app.route("/export_all", methods=["GET"])
+def export_all():
+    """
+    Export all nurses and preferences in optimizer-ready JSON format.
+    Fields are ordered consistently: id, name, level, employment_type, unit, preferences.
+    """
+    with db_connection() as conn:
+        nurses = conn.execute("SELECT id, name, level, employment_type, unit FROM nurses").fetchall()
+        prefs = conn.execute("SELECT nurse_id, preference_type, data FROM preferences").fetchall()
 
-@app.route("/export_profile/<nurse_id>", methods=["GET"])
-def export_profile(nurse_id):
-    conn = sqlite3.connect(DB_PATH)
-    nurse = conn.cursor().execute("SELECT * FROM nurses WHERE id = ?", (nurse_id,)).fetchone()
-    conn.close()
-    return jsonify({"nurse_id": nurse[0], "name": nurse[1], "level": nurse[2], "unit": nurse[4]})
+    nurse_dict = {}
+    for n in nurses:
+        nurse_id = n[0]
+        # Construct in target field order using OrderedDict
+        nurse_dict[nurse_id] = OrderedDict([
+            ("id", f"N{nurse_id:03}"),
+            ("name", n[1] or ""),
+            ("level", n[2] or 1),
+            ("employment_type", n[3] or "full_time"),
+            ("unit", n[4] or "ER"),
+            ("preferences", {
+                "preferred_shifts": [],
+                "preferred_days_off": []
+            })
+        ])
 
-# ---------------------------
-# Run (for local dev)
-# ---------------------------
+    for nurse_id, pref_type, data in prefs:
+        try:
+            parsed = json.loads(data)
+            if pref_type in nurse_dict[nurse_id]["preferences"]:
+                nurse_dict[nurse_id]["preferences"][pref_type].append(parsed)
+        except Exception as e:
+            logger.warning(f"Failed to parse preference for {nurse_id}: {e}")
+
+    # Sort output by numeric ID and maintain ordered keys
+    sorted_nurses = [nurse_dict[k] for k in sorted(nurse_dict.keys())]
+    return app.response_class(
+        response=json.dumps({"nurses": sorted_nurses}, ensure_ascii=False, indent=2),
+        mimetype="application/json"
+    )
+
+# ------------------------------------
+# Run App
+# ------------------------------------
 if __name__ == "__main__":
-    print(f"Starting Flask app on port 8080 | DB: {DB_PATH}")
+    logger.info(f"Starting NurseBot Flask app on port 8080 | DB: {DB_PATH}")
     app.run(port=8080, debug=True)
