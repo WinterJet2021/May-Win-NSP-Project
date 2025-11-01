@@ -1,0 +1,2389 @@
+{
+  "nurses": [
+    {
+      "id": "N001",
+      "name": "Nurse 1",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sat",
+              "Wed"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-20",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-30",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N002",
+      "name": "Nurse 2",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Sun",
+              "Fri"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-17",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N003",
+      "name": "Nurse 3",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Fri",
+              "Sat"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N004",
+      "name": "Nurse 4",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Thu",
+              "Fri",
+              "Sun"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-08",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N005",
+      "name": "Nurse 5",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Wed",
+              "Mon"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-05",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-08",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-09",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N006",
+      "name": "Nurse 6",
+      "level": 4,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Thu"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-07",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-12",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-14",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N007",
+      "name": "Nurse 7",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Thu",
+              "Sun"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-29",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N008",
+      "name": "Nurse 8",
+      "level": 3,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Mon",
+              "Thu",
+              "Wed"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-14",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-16",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N009",
+      "name": "Nurse 9",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sun",
+              "Fri"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-04",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-14",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-24",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N010",
+      "name": "Nurse 10",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Thu",
+              "Tue",
+              "Sat"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-05",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-16",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N011",
+      "name": "Nurse 11",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Fri"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N012",
+      "name": "Nurse 12",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Sat",
+              "Sun"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-15",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-24",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N013",
+      "name": "Nurse 13",
+      "level": 3,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Thu",
+              "Wed"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-30",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N014",
+      "name": "Nurse 14",
+      "level": 4,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Tue",
+              "Mon"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-15",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-24",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N015",
+      "name": "Nurse 15",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Sat",
+              "Thu"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-13",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-24",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N016",
+      "name": "Nurse 16",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sat",
+              "Fri"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-11",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N017",
+      "name": "Nurse 17",
+      "level": 4,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sat",
+              "Mon"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-04",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N018",
+      "name": "Nurse 18",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sun",
+              "Sat",
+              "Fri"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-05",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-29",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N019",
+      "name": "Nurse 19",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Sun",
+              "Mon"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-16",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N020",
+      "name": "Nurse 20",
+      "level": 3,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Sun",
+              "Sat"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-12",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-18",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N021",
+      "name": "Nurse 21",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Mon",
+              "Wed",
+              "Sun"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-03",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-13",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-14",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-16",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N022",
+      "name": "Nurse 22",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Fri",
+              "Sat"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-03",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-06",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N023",
+      "name": "Nurse 23",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Fri"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-04",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-16",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N024",
+      "name": "Nurse 24",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Wed",
+              "Sun",
+              "Fri"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-03",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-12",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N025",
+      "name": "Nurse 25",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Fri",
+              "Mon",
+              "Tue"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-20",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-29",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N026",
+      "name": "Nurse 26",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Mon",
+              "Sun"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-05",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N027",
+      "name": "Nurse 27",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Fri",
+              "Mon"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-03",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-07",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-17",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-30",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N028",
+      "name": "Nurse 28",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Thu",
+              "Sat",
+              "Mon"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-11",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N029",
+      "name": "Nurse 29",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sat",
+              "Thu",
+              "Mon"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-13",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-15",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-27",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N030",
+      "name": "Nurse 30",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sat",
+              "Tue"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-03",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-18",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N031",
+      "name": "Nurse 31",
+      "level": 4,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Sun",
+              "Wed",
+              "Mon"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-01",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-09",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-13",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N032",
+      "name": "Nurse 32",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Thu",
+              "Mon",
+              "Wed"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-11",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N033",
+      "name": "Nurse 33",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sat",
+              "Sun",
+              "Wed"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-01",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-07",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-27",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N034",
+      "name": "Nurse 34",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Fri",
+              "Sun",
+              "Tue"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-18",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N035",
+      "name": "Nurse 35",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Sat",
+              "Thu"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-09",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-11",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N036",
+      "name": "Nurse 36",
+      "level": 3,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Thu",
+              "Mon",
+              "Tue"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-13",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-27",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N037",
+      "name": "Nurse 37",
+      "level": 3,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Thu",
+              "Sun",
+              "Wed"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-01",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-04",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-05",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N038",
+      "name": "Nurse 38",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Mon",
+              "Sat"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-04",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N039",
+      "name": "Nurse 39",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Wed"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-11",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-13",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N040",
+      "name": "Nurse 40",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Tue",
+              "Thu"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-08",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-16",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N041",
+      "name": "Nurse 41",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Tue",
+              "Wed"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-09",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-29",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N042",
+      "name": "Nurse 42",
+      "level": 2,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Tue",
+              "Sat"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-09",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-18",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N043",
+      "name": "Nurse 43",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Mon",
+              "Tue"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-04",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-05",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N044",
+      "name": "Nurse 44",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Mon",
+              "Wed",
+              "Thu"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-06",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-10",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N045",
+      "name": "Nurse 45",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Tue",
+              "Sat",
+              "Fri"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-05",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-29",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N046",
+      "name": "Nurse 46",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Wed",
+              "Mon",
+              "Sun"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-15",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-24",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N047",
+      "name": "Nurse 47",
+      "level": 4,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Sun",
+              "Fri"
+            ],
+            "priority": "high"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-14",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-22",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N048",
+      "name": "Nurse 48",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Thu",
+              "Sun"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-10",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-12",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-27",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N049",
+      "name": "Nurse 49",
+      "level": 4,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Tue",
+              "Thu",
+              "Fri"
+            ],
+            "priority": "medium"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-09",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-21",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N050",
+      "name": "Nurse 50",
+      "level": 3,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Tue",
+              "Wed",
+              "Mon"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-18",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-23",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-26",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-30",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N051",
+      "name": "Nurse 51",
+      "level": 4,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "M",
+            "days": [
+              "Mon",
+              "Thu"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-08",
+            "rank": 1
+          },
+          {
+            "date": "2026-04-20",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-25",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-28",
+            "rank": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "N052",
+      "name": "Nurse 52",
+      "level": 1,
+      "employment_type": "full_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Mon",
+              "Tue",
+              "Fri"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-02",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-06",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-11",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-13",
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "N053",
+      "name": "Nurse 53",
+      "level": 3,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "A",
+            "days": [
+              "Sat",
+              "Tue"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-07",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-19",
+            "rank": 3
+          },
+          {
+            "date": "2026-04-27",
+            "rank": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "N054",
+      "name": "Nurse 54",
+      "level": 3,
+      "employment_type": "part_time",
+      "unit": "ER",
+      "preferences": {
+        "preferred_shifts": [
+          {
+            "shift": "N",
+            "days": [
+              "Fri",
+              "Mon",
+              "Thu"
+            ],
+            "priority": "low"
+          }
+        ],
+        "preferred_days_off": [
+          {
+            "date": "2026-04-03",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-04",
+            "rank": 2
+          },
+          {
+            "date": "2026-04-09",
+            "rank": 2
+          }
+        ]
+      }
+    }
+  ],
+  "shift_types": [
+    {
+      "code": "M",
+      "name": "Morning",
+      "start": "08:00",
+      "end": "16:00"
+    },
+    {
+      "code": "A",
+      "name": "Afternoon",
+      "start": "16:00",
+      "end": "24:00"
+    },
+    {
+      "code": "N",
+      "name": "Night",
+      "start": "00:00",
+      "end": "08:00"
+    }
+  ],
+  "coverage_requirements": [
+    {
+      "date": "2026-04-01",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-01",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-01",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-02",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-02",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-02",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-03",
+      "shift": "M",
+      "req_total": 11
+    },
+    {
+      "date": "2026-04-03",
+      "shift": "A",
+      "req_total": 7
+    },
+    {
+      "date": "2026-04-03",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-04",
+      "shift": "M",
+      "req_total": 7
+    },
+    {
+      "date": "2026-04-04",
+      "shift": "A",
+      "req_total": 7
+    },
+    {
+      "date": "2026-04-04",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-05",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-05",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-05",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-06",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-06",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-06",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-07",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-07",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-07",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-08",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-08",
+      "shift": "A",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-08",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-09",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-09",
+      "shift": "A",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-09",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-10",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-10",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-10",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-11",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-11",
+      "shift": "A",
+      "req_total": 6
+    },
+    {
+      "date": "2026-04-11",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-12",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-12",
+      "shift": "A",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-12",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-13",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-13",
+      "shift": "A",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-13",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-14",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-14",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-14",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-15",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-15",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-15",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-16",
+      "shift": "M",
+      "req_total": 11
+    },
+    {
+      "date": "2026-04-16",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-16",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-17",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-17",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-17",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-18",
+      "shift": "M",
+      "req_total": 7
+    },
+    {
+      "date": "2026-04-18",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-18",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-19",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-19",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-19",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-20",
+      "shift": "M",
+      "req_total": 11
+    },
+    {
+      "date": "2026-04-20",
+      "shift": "A",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-20",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-21",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-21",
+      "shift": "A",
+      "req_total": 7
+    },
+    {
+      "date": "2026-04-21",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-22",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-22",
+      "shift": "A",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-22",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-23",
+      "shift": "M",
+      "req_total": 11
+    },
+    {
+      "date": "2026-04-23",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-23",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-24",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-24",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-24",
+      "shift": "N",
+      "req_total": 3
+    },
+    {
+      "date": "2026-04-25",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-25",
+      "shift": "A",
+      "req_total": 6
+    },
+    {
+      "date": "2026-04-25",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-26",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-26",
+      "shift": "A",
+      "req_total": 6
+    },
+    {
+      "date": "2026-04-26",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-27",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-27",
+      "shift": "A",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-27",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-28",
+      "shift": "M",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-28",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-28",
+      "shift": "N",
+      "req_total": 4
+    },
+    {
+      "date": "2026-04-29",
+      "shift": "M",
+      "req_total": 8
+    },
+    {
+      "date": "2026-04-29",
+      "shift": "A",
+      "req_total": 7
+    },
+    {
+      "date": "2026-04-29",
+      "shift": "N",
+      "req_total": 5
+    },
+    {
+      "date": "2026-04-30",
+      "shift": "M",
+      "req_total": 10
+    },
+    {
+      "date": "2026-04-30",
+      "shift": "A",
+      "req_total": 9
+    },
+    {
+      "date": "2026-04-30",
+      "shift": "N",
+      "req_total": 3
+    }
+  ],
+  "policy_parameters": {
+    "no_consecutive_nights": true,
+    "min_rest_hours_between_shifts": 11,
+    "weights": {
+      "workload_fairness": 1.0,
+      "preferred_shift_satisfaction": 0.8,
+      "preferred_dayoff_satisfaction": 1.2
+    }
+  }
+}

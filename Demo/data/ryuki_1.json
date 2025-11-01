@@ -1,0 +1,168 @@
+{
+  "shift_types": [
+    { "code": "M", "name": "Morning",   "start": "07:00", "end": "15:00", "minutes": 480 },
+    { "code": "A", "name": "Afternoon", "start": "15:00", "end": "23:00", "minutes": 480 },
+    { "code": "N", "name": "Night",     "start": "23:00", "end": "07:00", "minutes": 480 }
+  ],
+
+  "nurses": [
+    {
+      "id": "N001",
+      "name": "Ryuki",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ICU",
+      "preferences": {
+        "preferred_shifts": [
+          { "days": ["Tue"], "priority": "medium", "shift": "A" },
+          { "days": ["Fri"], "priority": "medium", "shift": "N" }
+        ],
+        "preferred_days_off": [
+          { "date": "2025-11-13", "rank": 2 },
+          { "date": "2025-11-18", "rank": 2 }
+        ]
+      }
+    },
+    {
+      "id": "N002",
+      "name": "Pepper",
+      "level": 3,
+      "employment_type": "full_time",
+      "unit": "ICU",
+      "preferences": {
+        "preferred_shifts": [
+          { "days": ["Mon","Thu"], "priority": "high", "shift": "M" }
+        ],
+        "preferred_days_off": [
+          { "date": "2025-11-15", "rank": 1 }
+        ]
+      }
+    },
+    {
+      "id": "N003",
+      "name": "Time",
+      "level": 1,
+      "employment_type": "part_time",
+      "unit": "ICU",
+      "preferences": {
+        "preferred_shifts": [
+          { "days": ["Wed"], "priority": "medium", "shift": "A" }
+        ],
+        "preferred_days_off": [
+          { "date": "2025-11-20", "rank": 3 }
+        ]
+      }
+    },
+    {
+      "id": "N004",
+      "name": "Tuey",
+      "level": 4,
+      "employment_type": "full_time",
+      "unit": "ICU",
+      "preferences": {
+        "preferred_shifts": [
+          { "days": ["Fri"], "priority": "high", "shift": "N" }
+        ],
+        "preferred_days_off": [
+          { "date": "2025-11-11", "rank": 1 },
+          { "date": "2025-11-24", "rank": 2 }
+        ]
+      }
+    },
+    {
+      "id": "N005",
+      "name": "Diamond",
+      "level": 2,
+      "employment_type": "full_time",
+      "unit": "ICU",
+      "preferences": {
+        "preferred_shifts": [
+          { "days": ["Tue","Thu"], "priority": "medium", "shift": "M" }
+        ],
+        "preferred_days_off": [
+          { "date": "2025-11-17", "rank": 1 }
+        ]
+      }
+    }
+  ],
+
+  "coverage_requirements": [
+    { "date": "2025-11-10", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-10", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-10", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-11", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-11", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-11", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-12", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-12", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-12", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-13", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-13", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-13", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-14", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-14", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-14", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-15", "shift": "M", "req_total": 1 },
+    { "date": "2025-11-15", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-15", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-16", "shift": "M", "req_total": 1 },
+    { "date": "2025-11-16", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-16", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-17", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-17", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-17", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-18", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-18", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-18", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-19", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-19", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-19", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-20", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-20", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-20", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-21", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-21", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-21", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-22", "shift": "M", "req_total": 1 },
+    { "date": "2025-11-22", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-22", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-23", "shift": "M", "req_total": 1 },
+    { "date": "2025-11-23", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-23", "shift": "N", "req_total": 1 },
+
+    { "date": "2025-11-24", "shift": "M", "req_total": 2 },
+    { "date": "2025-11-24", "shift": "A", "req_total": 1 },
+    { "date": "2025-11-24", "shift": "N", "req_total": 1 }
+  ],
+
+  "date_horizon": {
+    "start": "2025-11-10",
+    "end": "2025-11-24"
+  },
+
+  "policy_parameters": {
+    "min_rest_hours_between_shifts": 11,
+    "no_consecutive_nights": true,
+    "weights": {
+      "preferred_shift_satisfaction": 1.0,
+      "preferred_dayoff_satisfaction": 1.0,
+      "coverage_shortfall_penalty": 50.0,
+      "overtime_penalty": 10.0,
+      "weekend_fairness_penalty": 2.0,
+      "night_imbalance_penalty": 2.0
+    }
+  }
+}

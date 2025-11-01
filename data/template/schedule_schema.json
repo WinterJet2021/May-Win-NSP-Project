@@ -1,0 +1,91 @@
+{
+  "title": "MayWinScheduleInput",
+  "type": "object",
+  "required": ["nurses", "shift_types", "coverage_requirements", "policy_parameters"],
+  "properties": {
+    "nurses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "level", "employment_type", "unit", "preferences"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^N\\d{3}$" },
+          "name": { "type": "string" },
+          "level": { "type": "integer", "minimum": 1 },
+          "employment_type": { "type": "string", "enum": ["full_time", "part_time", "contract"] },
+          "unit": { "type": "string" },
+          "preferences": {
+            "type": "object",
+            "required": ["preferred_shifts", "preferred_days_off"],
+            "properties": {
+              "preferred_shifts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["shift", "days", "priority"],
+                  "properties": {
+                    "shift": { "type": "string", "enum": ["M", "A", "N"] },
+                    "days": {
+                      "type": "array",
+                      "items": { "type": "string", "enum": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"] }
+                    },
+                    "priority": { "type": "string", "enum": ["low","medium","high"] }
+                  }
+                }
+              },
+              "preferred_days_off": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["date", "rank"],
+                  "properties": {
+                    "date": { "type": "string", "format": "date" },
+                    "rank": { "type": "integer", "minimum": 1, "maximum": 3 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "shift_types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "start", "end", "hours"],
+        "properties": {
+          "code": { "type": "string", "enum": ["M","A","N"] },
+          "start": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "end":   { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "hours": { "type": "number", "minimum": 1 }
+        }
+      }
+    },
+    "coverage_requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "shift", "unit", "req_total"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "shift": { "type": "string", "enum": ["M","A","N"] },
+          "unit": { "type": "string" },
+          "req_total": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "policy_parameters": {
+      "type": "object",
+      "properties": {
+        "max_consecutive_nights": { "type": "integer", "minimum": 0 },
+        "max_shifts_per_week": { "type": "integer", "minimum": 1 },
+        "weekends_fairness_weight": { "type": "number", "minimum": 0 },
+        "preference_weight_shift": { "type": "number", "minimum": 0 },
+        "preference_weight_dayoff": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -37,7 +37,8 @@ app = Flask(__name__)
 # ------------------------------------
 @contextmanager
 def db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    # ADJUSTED: allow multithread access from Flask/Rasa calls
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     try:
         yield conn
         conn.commit()
@@ -80,17 +81,37 @@ init_db()
 # ------------------------------------
 def get_or_create_nurse(line_user_id, name=None):
     """Find nurse by LINE user ID or create new record."""
-    with db_connection() as conn:
-        c = conn.cursor()
-        nurse = c.execute("SELECT id FROM nurses WHERE line_user_id = ?", (line_user_id,)).fetchone()
+    # ADJUSTED: auto-heal if tables missing; handle UNIQUE races safely
+    try:
+        with db_connection() as conn:
+            c = conn.cursor()
+            nurse = c.execute("SELECT id FROM nurses WHERE line_user_id = ?", (line_user_id,)).fetchone()
+            if nurse:
+                return nurse[0]
 
-        if nurse:
-            return nurse[0]
+            c.execute("INSERT INTO nurses (line_user_id, name) VALUES (?, ?)", (line_user_id, name or "Unknown"))
+            new_id = c.lastrowid
+            logger.info(f"New nurse created: ID={new_id}, LINE_ID={line_user_id}")
+            return new_id
 
-        c.execute("INSERT INTO nurses (line_user_id, name) VALUES (?, ?)", (line_user_id, name or "Unknown"))
-        new_id = c.lastrowid
-        logger.info(f"New nurse created: ID={new_id}, LINE_ID={line_user_id}")
-        return new_id
+    except sqlite3.OperationalError as e:
+        if "no such table" in str(e).lower():
+            init_db()
+            with db_connection() as conn:
+                c = conn.cursor()
+                nurse = c.execute("SELECT id FROM nurses WHERE line_user_id = ?", (line_user_id,)).fetchone()
+                if nurse:
+                    return nurse[0]
+                c.execute("INSERT INTO nurses (line_user_id, name) VALUES (?, ?)", (line_user_id, name or "Unknown"))
+                return c.lastrowid
+        raise
+    except sqlite3.IntegrityError:
+        # UNIQUE(line_user_id) race: fetch existing id
+        with db_connection() as conn:
+            row = conn.execute("SELECT id FROM nurses WHERE line_user_id = ?", (line_user_id,)).fetchone()
+            if row:
+                return row[0]
+        raise
 
 
 def update_nurse_details(nurse_id, level=None, unit=None, employment_type=None):
@@ -172,6 +193,57 @@ SHIFT_MAP = {
 # ------------------------------------
 # LINE Webhook + Rasa Integration
 # ------------------------------------
+
+# This endpoint is for development/testing without LINE (Made by Tuey na)
+@app.route("/callback_test", methods=["POST"])
+def callback_test():
+    data = request.get_json(force=True) or {}
+    text = (((data.get("events") or [{}])[0]).get("message") or {}).get("text", "")
+    user_id = (((data.get("events") or [{}])[0]).get("source") or {}).get("userId", "DEV_USER")
+
+    # Fallbacks if a simpler body is posted
+    text = data.get("text", text) or ""
+    user_id = data.get("user_id", user_id) or "DEV_USER"
+
+    # Create or lookup nurse
+    try:
+        profile_name = "Dev User"
+        nurse_id = get_or_create_nurse(user_id, profile_name)
+    except Exception as e:
+        logger.error(f"Dev test nurse create failed: {e}")
+        return jsonify({"ok": False, "error": "nurse_create"}), 500
+
+    # Call Rasa
+    try:
+        rasa_resp = requests.post(RASA_URL, json={"text": text}, timeout=5)
+        rasa_resp.raise_for_status()
+        rasa_data = rasa_resp.json()
+    except Exception as e:
+        logger.error(f"Dev test Rasa error: {e}")
+        return jsonify({"ok": False, "error": "rasa"}), 502
+
+    # Collect entities (keeps all repeated days)
+    raw_ents = rasa_data.get("entities", [])
+    entities = {}
+    for ent in raw_ents:
+        name = ent.get("entity")
+        val = ent.get("value")
+        if not name:
+            continue
+        if name in ("days",):
+            entities.setdefault(name, []).append(val)
+        else:
+            entities[name] = val
+
+    intent = rasa_data.get("intent", {}).get("name")
+    if not intent:
+        insert_preference(nurse_id, "unrecognized", {"text": text})
+        return jsonify({"ok": True, "reply": "nlu_fallback", "saved": False})
+
+    reply_text = process_intent(intent, nurse_id, entities, profile_name)
+    return jsonify({"ok": True, "intent": intent, "entities": entities, "reply": reply_text})
+
+
 @app.route("/callback", methods=["POST"])
 def callback():
     signature = request.headers.get("X-Line-Signature", "")
@@ -319,6 +391,44 @@ def export_all():
         response=json.dumps({"nurses": sorted_nurses}, ensure_ascii=False, indent=2),
         mimetype="application/json"
     )
+
+# ------------------------------------
+# Dev endpoints (added for quick diagnosis)
+# ------------------------------------
+@app.route("/health", methods=["GET"])
+def health():
+    ok, err = True, ""
+    try:
+        with db_connection() as conn:
+            conn.execute("SELECT 1")
+    except Exception as e:
+        ok, err = False, str(e)
+    return jsonify({"ok": ok, "db_path": DB_PATH, "error": err})
+
+@app.route("/dev/initdb", methods=["POST"])
+def dev_initdb():
+    try:
+        init_db()
+        return jsonify({"ok": True, "db_path": DB_PATH})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/dev/dbinfo", methods=["GET"])
+def dev_dbinfo():
+    try:
+        with db_connection() as conn:
+            tables = [r[0] for r in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+            ).fetchall()]
+            counts = {}
+            for t in tables:
+                try:
+                    counts[t] = conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+                except Exception:
+                    counts[t] = "n/a"
+        return jsonify({"ok": True, "db_path": DB_PATH, "tables": tables, "counts": counts})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 # ------------------------------------
 # Run App

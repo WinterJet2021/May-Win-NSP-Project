@@ -12,3 +12,5 @@ gurobi.log
 maywin.log
 .vscode/
 .github/
+rasa310/
+venv/
