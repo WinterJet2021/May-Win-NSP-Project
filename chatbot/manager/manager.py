@@ -1,247 +1,296 @@
-# manager.py 
-# Only for temporary use
-import os
-import json
-import requests
-import sqlite3
+# chatbot/manager/manager.py
+# Build optimizer-ready JSON from chatbot DB or webhook, with strong normalization
+
+from __future__ import annotations
+
+import os, re, json, sqlite3, requests
 from datetime import datetime, timedelta
 from pathlib import Path
 from collections import OrderedDict
+from typing import Dict, Any, List
+
+TARGET_MIN_NURSES = int(os.getenv("MANAGER_MIN_NURSES", "16"))
+
+# ----------------------------
+# Normalization helpers
+# ----------------------------
+DAY_MAP = {
+    "mon": "Mon", "monday": "Mon", "จันทร์": "Mon",
+    "tue": "Tue", "tuesday": "Tue", "อังคาร": "Tue",
+    "wed": "Wed", "wednesday": "Wed", "พุธ": "Wed",
+    "thu": "Thu", "thursday": "Thu", "พฤหัส": "Thu", "พฤหัสบดี": "Thu",
+    "fri": "Fri", "friday": "Fri", "ศุกร์": "Fri",
+    "sat": "Sat", "saturday": "Sat", "เสาร์": "Sat",
+    "sun": "Sun", "sunday": "Sun", "อาทิตย์": "Sun",
+}
+SHIFT_MAP = {
+    "morning": "M", "เช้า": "M", "m": "M",
+    "afternoon": "A", "บ่าย": "A", "a": "A", "evening": "A", "eve": "A",
+    "night": "N", "กลางคืน": "N", "ดึก": "N", "n": "N"
+}
 
 
-def fetch_webhook_json(url: str):
-    """Fetch nurse data from Flask webhook endpoint."""
+def _norm_days(raw: Any) -> List[str]:
+    if not raw:
+        return []
+    items = raw if isinstance(raw, list) else re.split(r"[,/\s]+", str(raw))
+    out = []
+    for t in items:
+        k = str(t).strip().lower()
+        out.append(DAY_MAP.get(k, k[:3].title()))
+    seen, result = set(), []
+    for d in out:
+        if d and d not in seen:
+            seen.add(d)
+            result.append(d)
+    return result
+
+
+def _norm_shift(raw: Any) -> str:
+    if not raw:
+        return "M"
+    k = str(raw).strip().lower()
+    if k in SHIFT_MAP:
+        return SHIFT_MAP[k]
+    c = k[0].upper()
+    return c if c in ("M", "A", "N") else "M"
+
+
+def _norm_date(raw: Any) -> str | None:
+    if not raw and raw != 0:
+        return None
+    s = str(raw)
+    # Try YYYY-MM-DD first
     try:
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        print(f"[INFO] Successfully fetched data from {url}")
-        return resp.json()
-    except Exception as e:
-        raise RuntimeError(f"Failed to fetch webhook data: {e}")
+        return datetime.strptime(s, "%Y-%m-%d").date().isoformat()
+    except Exception:
+        pass
+    # Try DD or D of current month
+    m = re.search(r"(\d{1,2})", s)
+    if not m:
+        return None
+    day = int(m.group(1))
+    now = datetime.now()
+    try:
+        return datetime(now.year, now.month, day).date().isoformat()
+    except Exception:
+        return None
 
 
-def load_reference_json(file_path: Path):
-    """Load static reference JSON containing shift_types and policy rules."""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+# ----------------------------
+# Fetchers
+# ----------------------------
+
+def fetch_webhook_json(url: str) -> Dict[str, Any]:
+    r = requests.get(url, timeout=10, headers={"Cache-Control": "no-cache"})
+    r.raise_for_status()
+    return r.json()
 
 
-# ===========================================================
-# Added Section: Local SQLite mode for testing (no ngrok/LINE)
-# ===========================================================
-def fetch_sqlite_json(db_path: Path) -> dict:
-    """Read nurses & preferences directly from SQLite and return the same shape as Flask /export_all."""
-    db_path = Path(db_path)
-    if not db_path.exists():
-        raise FileNotFoundError(f"SQLite DB not found: {db_path}")
-
+def fetch_sqlite_json(db_path: Path) -> Dict[str, Any]:
     with sqlite3.connect(str(db_path)) as conn:
         conn.row_factory = sqlite3.Row
-        nurses_rows = conn.execute(
+        nurses = conn.execute(
             "SELECT id, name, level, employment_type, unit FROM nurses"
         ).fetchall()
-        prefs_rows = conn.execute(
+        prefs  = conn.execute(
             "SELECT nurse_id, preference_type, data FROM preferences"
         ).fetchall()
 
-    nurse_dict = {}
-    for n in nurses_rows:
-        nid = n["id"]
-        nurse_dict[nid] = OrderedDict([
-            ("id", f"N{nid:03}"),
-            ("name", n["name"] or ""),
-            ("level", n["level"] if n["level"] is not None else 1),
+    nd: Dict[int, Dict[str, Any]] = {}
+    for n in nurses:
+        nid_int = int(n["id"])
+        nd[nid_int] = OrderedDict([
+            ("id", f"N{nid_int:03}"),
+            ("name", n["name"] or f"Nurse {nid_int}"),
+            ("level", int(n["level"]) if n["level"] is not None else 1),
             ("employment_type", n["employment_type"] or "full_time"),
             ("unit", n["unit"] or "ER"),
-            ("preferences", {
-                "preferred_shifts": [],
-                "preferred_days_off": []
-            })
+            ("preferences", {"preferred_shifts": [], "preferred_days_off": []})
         ])
 
-    for row in prefs_rows:
-        nurse_id = row["nurse_id"]
+    for row in prefs:
+        nid_int = int(row["nurse_id"])
+        if nid_int not in nd:  # skip orphans
+            continue
         ptype = row["preference_type"]
         try:
-            pdata = json.loads(row["data"]) if row["data"] else {}
+            payload = json.loads(row["data"]) if row["data"] else {}
         except Exception:
-            pdata = {}
-        if nurse_id in nurse_dict and ptype in nurse_dict[nurse_id]["preferences"]:
-            nurse_dict[nurse_id]["preferences"][ptype].append(pdata)
+            payload = {}
 
-    sorted_nurses = [nurse_dict[k] for k in sorted(nurse_dict.keys())]
-    return {"nurses": sorted_nurses}
+        if ptype == "preferred_shifts":
+            payload = {
+                "shift": _norm_shift(payload.get("shift")),
+                "days": _norm_days(payload.get("days")),
+                "priority": str(payload.get("priority", "medium")).lower(),
+            }
+        elif ptype == "preferred_days_off":
+            payload = {
+                "date": _norm_date(payload.get("date")),
+                "rank": int(payload.get("rank", 2))
+            }
 
+        if ptype in nd[nid_int]["preferences"]:
+            nd[nid_int]["preferences"][ptype].append(payload)
 
-def build_manager_output_from_sqlite(sqlite_db_path: Path, reference_json_path: Path, output_path: Path) -> dict:
-    """Same output structure as build_manager_output(), but reads nurse data from local SQLite instead of HTTP."""
-    base = fetch_sqlite_json(sqlite_db_path)
-    ref = load_reference_json(reference_json_path)
-
-    final_json = {
-        "nurses": base.get("nurses", []),
-        "shift_types": ref.get("shift_types", []),
-        "coverage_requirements": ref.get("coverage_requirements", []),
-        "policy_parameters": ref.get("policy_parameters", {}),
-    }
-
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(final_json, f, ensure_ascii=False, indent=2)
-
-    print(f"[✅] Manager output (sqlite) saved to {output_path}")
-    return final_json
-# ===========================================================
+    return {"nurses": [nd[k] for k in sorted(nd.keys())]}
 
 
-def build_manager_output(webhook_url: str, reference_json_path: Path, output_path: Path):
-    """Merge webhook JSON with reference schedule template."""
-    webhook_data = fetch_webhook_json(webhook_url)
-    ref_data = load_reference_json(reference_json_path)
+# ----------------------------
+# Enrichment (padding with realistic prefs/levels)
+# ----------------------------
 
-    final_json = {
-        "nurses": webhook_data.get("nurses", []),
-        "shift_types": ref_data.get("shift_types", []),
-        "coverage_requirements": ref_data.get("coverage_requirements", []),
-        "policy_parameters": ref_data.get("policy_parameters", {}),
-    }
+def ensure_min_nurses(cfg: Dict[str, Any], min_nurses: int = TARGET_MIN_NURSES) -> None:
+    nurses: List[Dict[str, Any]] = list(cfg.get("nurses") or [])
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(final_json, f, ensure_ascii=False, indent=2)
+    # normalize existing
+    for n in nurses:
+        prefs = n.get("preferences") or {}
+        n["preferences"] = {
+            "preferred_shifts": [
+                {
+                    "shift": _norm_shift(p.get("shift")),
+                    "days": _norm_days(p.get("days")),
+                    "priority": str(p.get("priority", "medium")).lower(),
+                }
+                for p in (prefs.get("preferred_shifts") or [])
+            ],
+            "preferred_days_off": [
+                {"date": _norm_date(p.get("date")), "rank": int(p.get("rank", 2))}
+                for p in (prefs.get("preferred_days_off") or [])
+            ],
+        }
+        n["level"] = int(n.get("level", 1))
+        n["employment_type"] = n.get("employment_type") or "full_time"
+        n["unit"] = n.get("unit") or "ER"
 
-    print(f"[✅] Manager output saved to {output_path}")
-    return final_json
+    existing_ids = {n.get("id") for n in nurses if n.get("id")}
+    # find next idx
+    max_idx = 0
+    for nid in existing_ids:
+        try:
+            if isinstance(nid, str) and nid.startswith("N"):
+                max_idx = max(max_idx, int(nid[1:]))
+        except Exception:
+            pass
 
-
-# ===========================================================
-# Added Section: Combined mock + database demo mode + normalization
-# ===========================================================
-def build_manager_output_mock_with_db(sqlite_db_path: Path, reference_json_path: Path, output_path: Path) -> dict:
-    """Generate 14 mock nurses + 1 real nurse from database with normalized format."""
     import random
-
-    # Load 1 nurse from DB (if available)
-    try:
-        db_data = fetch_sqlite_json(sqlite_db_path)
-        db_nurses = db_data.get("nurses", [])
-        db_nurse = db_nurses[0] if db_nurses else None
-        print(f"[INFO] Loaded {len(db_nurses)} nurses from database.")
-    except Exception as e:
-        print(f"[WARN] Could not read DB nurse: {e}")
-        db_nurse = None
-
-    # Generate 14 mock nurses
-    mock_nurses = []
-    for i in range(1, 15):
-        mock_nurses.append({
-            "id": f"N{i:03}",
-            "name": f"Nurse {i}",
-            "level": 1 if i <= 8 else 2,
+    day_options = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    while len(nurses) < min_nurses:
+        max_idx += 1
+        nid = f"N{max_idx:03}"
+        level = 2 if (len(nurses) % 5 in (0, 1)) else 1
+        shift = random.choice(["M","A","N"])
+        days = random.sample(day_options, 3)
+        priority = random.choice(["low","medium","high"])
+        nurses.append({
+            "id": nid,
+            "name": f"Nurse {nid}",
+            "level": level,
             "employment_type": "full_time",
             "unit": "ER",
             "preferences": {
-                "preferred_shifts": [
-                    {
-                        "shift": random.choice(["M", "A", "N"]),
-                        "days": random.sample(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], k=random.randint(3, 5)),
-                        "priority": random.choice(["low", "medium", "high"])
-                    }
-                ],
-                "preferred_days_off": [
-                    {"date": f"2025-11-{d:02}", "rank": random.randint(1, 3)}
-                    for d in sorted(random.sample(range(1, 29), k=random.randint(3, 4)))
-                ]
+                "preferred_shifts": [{"shift": shift, "days": days, "priority": priority}],
+                "preferred_days_off": [{"date": _norm_date(15), "rank": 2}],
             }
         })
+        existing_ids.add(nid)
 
-    # Merge DB nurse as last entry
-    all_nurses = mock_nurses
-    if db_nurse:
-        db_nurse["id"] = "N015"
-        all_nurses.append(db_nurse)
-    else:
-        all_nurses.append({
-            "id": "N015",
-            "name": "Nurse 15 (DB Placeholder)",
-            "level": 2,
-            "employment_type": "full_time",
-            "unit": "ER",
-            "preferences": {"preferred_shifts": [], "preferred_days_off": []}
-        })
+    cfg["nurses"] = nurses
 
-    # Generate default reference if missing
-    if reference_json_path is None or not Path(reference_json_path).exists():
-        print("[WARN] Reference file not found, using built-in defaults for shift_types and policy.")
-        ref = {
-            "shift_types": [
-                {"code": "M", "name": "Morning", "start": "08:00", "end": "16:00"},
-                {"code": "A", "name": "Afternoon", "start": "16:00", "end": "24:00"},
-                {"code": "N", "name": "Night", "start": "00:00", "end": "08:00"}
-            ],
-            "policy_parameters": {
-                "no_consecutive_nights": True,
-                "min_rest_hours_between_shifts": 11,
-                "weights": {
-                    "workload_fairness": 1.0,
-                    "preferred_shift_satisfaction": 0.8,
-                    "preferred_dayoff_satisfaction": 1.2
-                }
-            }
-        }
-    else:
-        ref = load_reference_json(reference_json_path)
 
-    # === Auto-generate coverage requirements ===
-    start_date = datetime(2025, 11, 1)
-    num_days = 28
-    shifts = ["M", "A", "N"]
-    coverage_requirements = []
-    for i in range(num_days):
-        current_date = (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
-        for s in shifts:
-            coverage_requirements.append({
-                "date": current_date,
-                "shift": s,
-                "req_total": 6 if s in ["M", "A"] else 2
-            })
+# ----------------------------
+# Reference + coverage synth
+# ----------------------------
 
-    final_json = {
-        "nurses": all_nurses,
-        "shift_types": ref.get("shift_types", []),
-        "coverage_requirements": coverage_requirements,
-        "policy_parameters": ref.get("policy_parameters", {}),
+def _default_reference() -> Dict[str, Any]:
+    return {
+        "shift_types": [{"code": "M"}, {"code": "A"}, {"code": "N"}],
+        "policy_parameters": {
+            "no_consecutive_nights": True,
+            "min_rest_hours_between_shifts": 11,
+            "weights": {
+                "preferred_shift_satisfaction": 1.0,
+                "preferred_dayoff_satisfaction": 1.2,
+                "shortfall_penalty": 1000.0
+            },
+        },
     }
 
-    # Save final normalized output
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(final_json, f, ensure_ascii=False, indent=2)
 
-    print(f"[✅] Normalized manager output (mock + DB) saved to {output_path}")
-    return final_json
-# ===========================================================
+def _synth_coverage(start_date: datetime, days: int, m: int, a: int, n: int) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    for i in range(days):
+        d = (start_date + timedelta(days=i)).date().isoformat()
+        out += [
+            {"date": d, "shift": "M", "req_total": int(m)},
+            {"date": d, "shift": "A", "req_total": int(a)},
+            {"date": d, "shift": "N", "req_total": int(n)},
+        ]
+    return out
+
+
+# ----------------------------
+# Builders
+# ----------------------------
+
+def build_from_webhook(
+    webhook_url: str,
+    out_path: Path,
+    coverage_days: int = 14,
+    m: int = 4, a: int = 4, n: int = 2,
+    reference: Dict[str, Any] | None = None
+) -> Dict[str, Any]:
+    base = fetch_webhook_json(webhook_url)
+    cfg = {"nurses": base.get("nurses", [])}
+    ensure_min_nurses(cfg, TARGET_MIN_NURSES)
+    ref = reference or _default_reference()
+
+    today = datetime.now().date()
+    cfg.update({
+        "shift_types": ref["shift_types"],
+        "coverage_requirements": _synth_coverage(datetime.combine(today, datetime.min.time()), coverage_days, m, a, n),
+        "date_horizon": {"start": today.isoformat(), "end": (today + timedelta(days=coverage_days-1)).isoformat()},
+        "policy_parameters": ref["policy_parameters"],
+    })
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[✅] Manager output saved -> {out_path}")
+    return cfg
+
+
+def build_from_sqlite(
+    db_path: Path,
+    out_path: Path,
+    coverage_days: int = 14,
+    m: int = 4, a: int = 4, n: int = 2,
+    reference: Dict[str, Any] | None = None
+) -> Dict[str, Any]:
+    base = fetch_sqlite_json(db_path)
+    cfg = {"nurses": base.get("nurses", [])}
+    ensure_min_nurses(cfg, TARGET_MIN_NURSES)
+    ref = reference or _default_reference()
+
+    today = datetime.now().date()
+    cfg.update({
+        "shift_types": ref["shift_types"],
+        "coverage_requirements": _synth_coverage(datetime.combine(today, datetime.min.time()), coverage_days, m, a, n),
+        "date_horizon": {"start": today.isoformat(), "end": (today + timedelta(days=coverage_days-1)).isoformat()},
+        "policy_parameters": ref["policy_parameters"],
+    })
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[✅] Manager output (sqlite) saved -> {out_path}")
+    return cfg
 
 
 if __name__ == "__main__":
-    WEBHOOK_URL = "https://rosalinda-asterismal-ollie.ngrok-free.dev/export_all"
-    REFERENCE_FILE = Path("synthetic_schedule_2026-06_30nurses_allER.json")
-    if not REFERENCE_FILE.exists():
-        print("[WARN] Reference file not found, will use built-in defaults.")
-        REFERENCE_FILE = None
-
-    OUTPUT_FILE = Path(f"manager_output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
-
-    source = os.getenv("MANAGER_SOURCE", "sqlite").lower()
-    sqlite_db = Path(os.getenv("MANAGER_DB", "nurse_prefs.db"))
-
-    try:
-        if source == "sqlite":
-            build_manager_output_from_sqlite(sqlite_db, REFERENCE_FILE, OUTPUT_FILE)
-        elif source in ("mock", "mock_db"):
-            build_manager_output_mock_with_db(sqlite_db, REFERENCE_FILE, OUTPUT_FILE)
-        else:
-            build_manager_output(WEBHOOK_URL, REFERENCE_FILE, OUTPUT_FILE)
-    except Exception as e:
-        print(f"[ERROR] {e}")
+    src = os.getenv("MANAGER_SOURCE", "webhook").lower()
+    out = Path(os.getenv("MANAGER_OUTPUT", f"manager_output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"))
+    if src == "sqlite":
+        build_from_sqlite(Path(os.getenv("MANAGER_DB", "nurse_prefs.db")), out)
+    else:
+        build_from_webhook(os.getenv("MANAGER_WEBHOOK", "http://localhost:8080/export_all"), out)
