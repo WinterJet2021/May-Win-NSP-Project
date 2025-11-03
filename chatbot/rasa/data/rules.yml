@@ -1,0 +1,17 @@
+version: "3.1"
+rules:
+# -----------------------------
+# GREETING RULE
+# -----------------------------
+- rule: Greet the user
+  steps:
+    - intent: greet
+    - action: utter_greet
+
+# -----------------------------
+# FALLBACK HANDLING
+# -----------------------------
+- rule: Default fallback message
+  steps:
+    - intent: nlu_fallback
+    - action: utter_fallback

@@ -1,0 +1,22 @@
+language: xx
+
+pipeline:
+- name: WhitespaceTokenizer
+- name: LanguageModelFeaturizer
+  model_name: "bert"
+  model_weights: "bert-base-multilingual-cased"
+- name: LexicalSyntacticFeaturizer
+- name: CountVectorsFeaturizer
+- name: DIETClassifier
+  epochs: 100
+  constrain_similarities: true
+- name: EntitySynonymMapper
+- name: ResponseSelector
+  epochs: 100
+
+policies:
+- name: RulePolicy
+- name: MemoizationPolicy
+- name: TEDPolicy
+  epochs: 50
+assistant_id: 20251031-151446-other-function

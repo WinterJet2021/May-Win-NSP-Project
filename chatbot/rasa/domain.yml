@@ -1,0 +1,96 @@
+version: "3.1"
+
+intents:
+  - update_profile
+  - add_shift_preference
+  - add_day_off
+  - greet
+  - goodbye
+  - fallback
+
+entities:
+  - level
+  - employment_type
+  - unit
+  - shift
+  - days
+  - date
+  - from
+  - to
+  - priority
+  - rank
+
+slots:
+  level:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: level
+
+  employment_type:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: employment_type
+
+  unit:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: unit
+
+  shift:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: shift
+
+  days:
+    type: list
+    mappings:
+      - type: from_entity
+        entity: days
+
+  date:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: date
+
+  from:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: from
+
+  to:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: to
+
+  priority:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: priority
+
+  rank:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: rank
+
+
+responses:
+  utter_greet:
+    - text: "สวัสดีค่ะ ฉันสามารถช่วยบันทึกความต้องการของคุณได้ เช่น เวรที่ชอบหรือวันหยุด"
+    - text: "Hello! I can help you record your work preferences — like preferred shifts or days off."
+
+  utter_fallback:
+    - text: "ขอโทษค่ะ ฉันไม่เข้าใจ ลองพิมพ์ใหม่อีกครั้งนะคะ"
+    - text: "Sorry, I didn’t understand. Could you please rephrase?"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
