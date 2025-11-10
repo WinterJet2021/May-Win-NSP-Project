@@ -1,2 +1,8 @@
 [build]
 target-dir = "target"
+
+[alias]
+dev = "watch -q -c -w src -w Cargo.toml -x run"
+
+[env]
+RUST_LOG = "info,tower_http=info"
