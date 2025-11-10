@@ -231,17 +231,7 @@ The **MayWin Nurse Scheduling Platform (NSP)** backend is a modular, service-ori
 
 ---
 
-## 9. Key Insights & Best Practices
-
-* Use `required_count` (not `required`) in coverage.
-* Ensure `is_night` is included for overnight shifts.
-* Always use WSL gateway IP for FastAPI connectivity.
-* Duplicate `(unit_id, name, version)` in `policy_sets` yields HTTP 400.
-* Keep policies versioned and immutable for reproducibility.
-
----
-
-## 10. Next Steps
+## 9. Next Steps
 
 * Generate public API documentation (Swagger or Redoc from OpenAPI spec).
 * Automate seed scripts for organizations, sites, and units.
